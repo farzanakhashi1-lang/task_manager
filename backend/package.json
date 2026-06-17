@@ -5,11 +5,13 @@
   "main": "server.js",
   "scripts": {
     "dev": "NODE_OPTIONS=--no-warnings node server.js",
-    "start": "NODE_ENV=production NODE_OPTIONS=--no-warnings node server.js"
+    "start": "NODE_ENV=production NODE_OPTIONS=--no-warnings node server.js",
+    "migrate": "node migrateSqliteToMongo.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "mongodb": "^7.3.0"
+    "mongodb": "^7.3.0",
+    "dotenv": "^16.1.4"
   }
 }

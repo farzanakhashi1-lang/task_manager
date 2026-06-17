@@ -1,9 +1,12 @@
+import dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createTask, deleteTask, getDatabaseType, getTasks, initializeDatabase, updateTask } from "./database.js";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
