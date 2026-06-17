@@ -178,21 +178,3 @@ Run the backend API test:
 ```bash
 npm test
 ```
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| GET | `/api/health` | Check server status |
-| GET | `/api/tasks` | Get tasks with optional search/filter |
-| POST | `/api/tasks` | Add a new task |
-| PUT | `/api/tasks/:id` | Update a task |
-| DELETE | `/api/tasks/:id` | Delete a task |
-
-## Final Submission Checklist
-
-- Private GitHub repository link
-- Add instructor as collaborator: `@bakhtiyar-k`
-- Report PDF
-- Demo video link, 3-5 minutes
-- Contribution table
