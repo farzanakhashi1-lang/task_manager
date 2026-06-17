@@ -1,18 +1,19 @@
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import http from "node:http";
+import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dataFile = path.join(__dirname, "..", "data", "tasks.json");
-const originalData = await fs.readFile(dataFile, "utf8");
+const testDataDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "task-manager-test-"));
+const testDatabaseFile = path.join(testDataDirectory, "task-manager-test.sqlite");
 const port = 5055;
 const server = spawn(process.execPath, ["server.js"], {
   cwd: path.join(__dirname, ".."),
-  env: { ...process.env, HOST: "127.0.0.1", PORT: String(port) },
+  env: { ...process.env, DATABASE_FILE: testDatabaseFile, HOST: "127.0.0.1", PORT: String(port) },
   stdio: "pipe"
 });
 
@@ -96,5 +97,5 @@ try {
   console.log("API tests passed.");
 } finally {
   server.kill();
-  await fs.writeFile(dataFile, originalData);
+  await fs.rm(testDataDirectory, { force: true, recursive: true });
 }

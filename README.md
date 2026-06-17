@@ -8,7 +8,7 @@ Web Project: Task Manager
 
 ## Description
 
-This project is a simple task manager web application. Users can add, view, edit, delete, search, and filter tasks. The frontend is built with HTML5, CSS3, and React. The backend is built with Node.js and Express.
+This project is a simple task manager web application. Users can add, view, edit, delete, search, and filter tasks. The frontend is built with HTML5, CSS3, and React. The backend is built with Node.js and Express, and task data is stored in a SQLite database.
 
 ## Main Features
 
@@ -18,7 +18,7 @@ This project is a simple task manager web application. Users can add, view, edit
 - Delete tasks
 - Search tasks by title or description
 - Filter tasks by status and priority
-- Store tasks in a JSON file on the backend
+- Store tasks in a SQLite database on the backend
 - Basic API validation and automated API test
 
 ## Technologies Used
@@ -29,12 +29,13 @@ This project is a simple task manager web application. Users can add, view, edit
 - Vite
 - Node.js
 - Express.js
-- JSON file storage
+- SQLite database
 
 ## Project Structure
 
 ```text
 backend/
+  database.js
   data/tasks.json
   server.js
   tests/api.test.js
@@ -79,6 +80,16 @@ Backend API runs at:
 http://localhost:5001/api
 ```
 
+## Database
+
+The backend uses SQLite for persistent task storage. When the server starts, it automatically creates this database file:
+
+```text
+backend/data/task_manager.sqlite
+```
+
+The file `backend/data/tasks.json` is used only as seed data when the database is empty. The SQLite database file is ignored by Git because it is generated automatically.
+
 ## Build For Final Demo
 
 ```bash
@@ -120,7 +131,7 @@ After deployment, Render gives you an online link ending with:
 .onrender.com
 ```
 
-Important: this project uses JSON file storage. It is fine for the assignment demo, but online hosting may reset file changes after redeploys or restarts. For long-term online use, replace JSON storage with MongoDB Atlas, Supabase, or PostgreSQL.
+Important: this project uses SQLite database storage. It is good for local demo and simple deployment, but online hosting may reset local database files after redeploys or restarts. For long-term online use, replace SQLite with MongoDB Atlas, Supabase, or PostgreSQL.
 
 ## Testing
 

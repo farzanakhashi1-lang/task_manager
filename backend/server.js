@@ -3,10 +3,10 @@ import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createTask, deleteTask, getTasks, updateTask } from "./database.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dataFile = path.join(__dirname, "data", "tasks.json");
 const frontendBuild = path.join(__dirname, "..", "frontend", "dist");
 
 const app = express();
@@ -17,15 +17,6 @@ const allowedStatuses = ["Todo", "In Progress", "Done"];
 
 app.use(cors());
 app.use(express.json());
-
-async function readTasks() {
-  const content = await fs.readFile(dataFile, "utf8");
-  return JSON.parse(content);
-}
-
-async function writeTasks(tasks) {
-  await fs.writeFile(dataFile, JSON.stringify(tasks, null, 2));
-}
 
 function normalizeTaskInput(body) {
   return {
@@ -57,21 +48,8 @@ app.get("/api/health", (_req, res) => {
 app.get("/api/tasks", async (req, res, next) => {
   try {
     const { search = "", status = "All", priority = "All" } = req.query;
-    const searchText = String(search).trim().toLowerCase();
-    const tasks = await readTasks();
-
-    const filteredTasks = tasks.filter((task) => {
-      const matchesSearch =
-        !searchText ||
-        task.title.toLowerCase().includes(searchText) ||
-        task.description.toLowerCase().includes(searchText);
-      const matchesStatus = status === "All" || task.status === status;
-      const matchesPriority = priority === "All" || task.priority === priority;
-
-      return matchesSearch && matchesStatus && matchesPriority;
-    });
-
-    res.json(filteredTasks);
+    const tasks = getTasks({ search, status, priority });
+    res.json(tasks);
   } catch (error) {
     next(error);
   }
@@ -93,11 +71,7 @@ app.post("/api/tasks", async (req, res, next) => {
       createdAt: now,
       updatedAt: now
     };
-    const tasks = await readTasks();
-    tasks.unshift(newTask);
-    await writeTasks(tasks);
-
-    res.status(201).json(newTask);
+    res.status(201).json(createTask(newTask));
   } catch (error) {
     next(error);
   }
@@ -112,20 +86,11 @@ app.put("/api/tasks/:id", async (req, res, next) => {
       return res.status(400).json({ errors });
     }
 
-    const tasks = await readTasks();
-    const taskIndex = tasks.findIndex((task) => task.id === req.params.id);
+    const updatedTask = updateTask(req.params.id, taskInput);
 
-    if (taskIndex === -1) {
+    if (!updatedTask) {
       return res.status(404).json({ errors: ["Task was not found."] });
     }
-
-    const updatedTask = {
-      ...tasks[taskIndex],
-      ...taskInput,
-      updatedAt: new Date().toISOString()
-    };
-    tasks[taskIndex] = updatedTask;
-    await writeTasks(tasks);
 
     res.json(updatedTask);
   } catch (error) {
@@ -135,14 +100,10 @@ app.put("/api/tasks/:id", async (req, res, next) => {
 
 app.delete("/api/tasks/:id", async (req, res, next) => {
   try {
-    const tasks = await readTasks();
-    const remainingTasks = tasks.filter((task) => task.id !== req.params.id);
-
-    if (remainingTasks.length === tasks.length) {
+    if (!deleteTask(req.params.id)) {
       return res.status(404).json({ errors: ["Task was not found."] });
     }
 
-    await writeTasks(remainingTasks);
     res.status(204).send();
   } catch (error) {
     next(error);

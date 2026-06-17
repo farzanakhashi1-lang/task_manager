@@ -31,7 +31,7 @@ Students often need to manage deadlines, reports, demo videos, and coding tasks 
 
 ## 5. Methodology / Tools And Technologies Used
 
-The project uses a client-server architecture.
+The project uses a client-server architecture with database storage.
 
 Frontend:
 
@@ -44,7 +44,7 @@ Backend:
 
 - Node.js runtime
 - Express.js web framework
-- JSON file storage for task data
+- SQLite database for task data
 - REST API endpoints for CRUD operations
 
 ## 6. Main Features / Model Description
@@ -70,7 +70,7 @@ Task fields:
 
 ## 7. Implementation Explanation
 
-The backend is implemented in `backend/server.js`. It provides REST API endpoints under `/api/tasks`. The tasks are stored in `backend/data/tasks.json`. The server validates task input before saving it.
+The backend is implemented in `backend/server.js`. It provides REST API endpoints under `/api/tasks`. The tasks are stored in a SQLite database created by `backend/database.js`. The file `backend/data/tasks.json` is used as seed data when the database is empty. The server validates task input before saving it.
 
 The frontend is implemented in `frontend/src/main.jsx`. It uses React state to manage the form, current filters, edit mode, loading state, and messages. It sends requests to the backend API using `fetch`.
 
@@ -105,7 +105,7 @@ The command `npm test` runs a backend API test that creates, updates, searches, 
 
 ## 10. Difficulties And Solutions
 
-One difficulty was choosing a data storage method that is simple for a student project. A full database would require more setup during the demo, so JSON file storage was used. This keeps the project easy to run while still showing backend CRUD logic.
+One difficulty was choosing a data storage method that is simple for a student project. SQLite was selected because it is a real database but does not require a separate database server or online account during the demo.
 
 Another difficulty was making the interface clear on both laptop and mobile screens. This was solved with responsive CSS grid layouts and readable form controls.
 
@@ -117,4 +117,3 @@ The Task Manager project successfully implements a full-stack web application us
 
 GitHub repository link: Add your private GitHub repository link here  
 Demo video link: Add your demo video link here
-

@@ -4,8 +4,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js",
-    "start": "NODE_ENV=production node server.js"
+    "dev": "NODE_OPTIONS=--no-warnings node server.js",
+    "start": "NODE_ENV=production NODE_OPTIONS=--no-warnings node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
