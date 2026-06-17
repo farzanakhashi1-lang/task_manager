@@ -3,7 +3,7 @@ import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createTask, deleteTask, getTasks, updateTask } from "./database.js";
+import { createTask, deleteTask, getDatabaseType, getTasks, initializeDatabase, updateTask } from "./database.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,13 +42,13 @@ function validateTask(task) {
 }
 
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", project: "Task Manager" });
+  res.json({ status: "ok", project: "Task Manager", database: getDatabaseType() });
 });
 
 app.get("/api/tasks", async (req, res, next) => {
   try {
     const { search = "", status = "All", priority = "All" } = req.query;
-    const tasks = getTasks({ search, status, priority });
+    const tasks = await getTasks({ search, status, priority });
     res.json(tasks);
   } catch (error) {
     next(error);
@@ -71,7 +71,7 @@ app.post("/api/tasks", async (req, res, next) => {
       createdAt: now,
       updatedAt: now
     };
-    res.status(201).json(createTask(newTask));
+    res.status(201).json(await createTask(newTask));
   } catch (error) {
     next(error);
   }
@@ -86,7 +86,7 @@ app.put("/api/tasks/:id", async (req, res, next) => {
       return res.status(400).json({ errors });
     }
 
-    const updatedTask = updateTask(req.params.id, taskInput);
+    const updatedTask = await updateTask(req.params.id, taskInput);
 
     if (!updatedTask) {
       return res.status(404).json({ errors: ["Task was not found."] });
@@ -100,7 +100,7 @@ app.put("/api/tasks/:id", async (req, res, next) => {
 
 app.delete("/api/tasks/:id", async (req, res, next) => {
   try {
-    if (!deleteTask(req.params.id)) {
+    if (!(await deleteTask(req.params.id))) {
       return res.status(404).json({ errors: ["Task was not found."] });
     }
 
@@ -126,6 +126,13 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ errors: ["Server error. Please try again."] });
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Task Manager API is running on http://${HOST}:${PORT}`);
-});
+try {
+  await initializeDatabase();
+
+  app.listen(PORT, HOST, () => {
+    console.log(`Task Manager API is running on http://${HOST}:${PORT}`);
+  });
+} catch (error) {
+  console.error("Failed to start Task Manager API:", error);
+  process.exit(1);
+}

@@ -13,7 +13,13 @@ const testDatabaseFile = path.join(testDataDirectory, "task-manager-test.sqlite"
 const port = 5055;
 const server = spawn(process.execPath, ["server.js"], {
   cwd: path.join(__dirname, ".."),
-  env: { ...process.env, DATABASE_FILE: testDatabaseFile, HOST: "127.0.0.1", PORT: String(port) },
+  env: {
+    ...process.env,
+    DATABASE_FILE: testDatabaseFile,
+    HOST: "127.0.0.1",
+    MONGODB_URI: "",
+    PORT: String(port)
+  },
   stdio: "pipe"
 });
 
