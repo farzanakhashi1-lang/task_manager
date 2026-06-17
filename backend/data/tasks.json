@@ -1,0 +1,32 @@
+[
+  {
+    "id": "task-1781707672582",
+    "title": "task 345",
+    "description": "6yn5ikg5",
+    "priority": "High",
+    "status": "In Progress",
+    "dueDate": "2012-02-22",
+    "createdAt": "2026-06-17T14:47:52.582Z",
+    "updatedAt": "2026-06-17T14:47:52.582Z"
+  },
+  {
+    "id": "task-1",
+    "title": "Prepare project report",
+    "description": "Write the title page, methodology, screenshots, testing results, and conclusion.",
+    "priority": "High",
+    "status": "In Progress",
+    "dueDate": "2026-06-16",
+    "createdAt": "2026-06-10T09:00:00.000Z",
+    "updatedAt": "2026-06-12T11:30:00.000Z"
+  },
+  {
+    "id": "task-2",
+    "title": "Record demo video",
+    "description": "Show GitHub repository, running project, CRUD features, filters, and team contributions.",
+    "priority": "Medium",
+    "status": "Todo",
+    "dueDate": "2026-06-17",
+    "createdAt": "2026-06-11T10:15:00.000Z",
+    "updatedAt": "2026-06-11T10:15:00.000Z"
+  }
+]
